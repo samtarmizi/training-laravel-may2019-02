@@ -89,7 +89,7 @@ $ php artisan make:notification WelcomeNotification
 
 Do update your `WelcomeNotification` class accordingly.
 
-```
+```php
 <?php
 
 namespace App\Notifications;
@@ -158,7 +158,105 @@ class WelcomeNotification extends Notification
 
 ### Middleware
 
+Create middleware, in this case to minify HTML for performance:
+
+```
+$ php artisan make:middleware MinifyHtml
+```
+
+Open and update the `App/Http/Middleware/MinifyHtml` file:
+
+```php 
+<?php
+
+namespace App\Http\Middleware;
+
+use Closure;
+
+class MinifyHtml
+{
+    /**
+     * Handle an incoming request.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param \Closure                 $next
+     *
+     * @return mixed
+     */
+    public function handle($request, Closure $next)
+    {
+        $response = $next($request);
+
+        return $this->html($response);
+    }
+
+    public function html($response)
+    {
+        $buffer = $response->getContent();
+
+        $replace = [
+            '/<!--[^\[](.*?)[^\]]-->/s' => '',
+            "/<\?php/"                  => '<?php ',
+            "/\n([\S])/"                => '$1',
+            "/\r/"                      => '',
+            "/\n/"                      => '',
+            "/\t/"                      => '',
+            '/ +/'                      => ' ',
+        ];
+
+        if (false !== strpos($buffer, '<pre>')) {
+            $replace = [
+                '/<!--[^\[](.*?)[^\]]-->/s' => '',
+                "/<\?php/"                  => '<?php ',
+                "/\r/"                      => '',
+                "/>\n</"                    => '><',
+                "/>\s+\n</"                 => '><',
+                "/>\n\s+</"                 => '><',
+            ];
+        }
+
+        $buffer = preg_replace(array_keys($replace), array_values($replace), $buffer);
+
+        $response->setContent($buffer);
+
+        return $response;
+    }
+}
+```
+
+Then register in `app/Http/Kernel.php`, in `web` group middleware 
+
+```php 
+<?php 
+
+protected $middlewareGroups = [
+    'web' => [
+        \App\Http\Middleware\EncryptCookies::class,
+        \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
+        \Illuminate\Session\Middleware\StartSession::class,
+        // \Illuminate\Session\Middleware\AuthenticateSession::class,
+        \Illuminate\View\Middleware\ShareErrorsFromSession::class,
+        \App\Http\Middleware\VerifyCsrfToken::class,
+        \Illuminate\Routing\Middleware\SubstituteBindings::class,
+        \App\Http\Middleware\MinifyHtml::class,
+    ],
+
+    'api' => [
+        'throttle:60,1',
+        'bindings',
+    ],
+];
+```
+
+Now your application, should minify the HTML output when display to user.
+
+Right click in browser, select `View Source`.
+
+[Reference](https://blog.nasrulhazim.com/2018/02/laravel-minify-html/)
+
 ### Notification
+
+Refer in [Event & Listener](#event-listener)
 
 ### Processors vs Services
 
