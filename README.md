@@ -260,6 +260,27 @@ Refer in [Event & Listener](#event-listener)
 
 ### Processors vs Services
 
+**Processor**: Think of processes of getting something. It's like you are registering for company to SSM. You provide your company details and give to SSM to PROCESS. That PROCESS, is the process of the SSM have. In application terms, SSM = application, processing the company registration form is a Processor. 
+
+**Service**: Think of service provider like TM Unifi, Celcom, McDonald. They provide services to end users. In application level, the application provide service to consumer, which the consumer is the other application that want to use the application services. 
+
+
+```php
+// helper
+userProcessor($username, $email, $password);
+// processor
+\App\Processors\UserProcessor::make($username, $email, $password);
+
+// services
+\App\Services\UserService::make($username)->avatar();
+// helper for services
+avatar($username);
+// api 
+return response()->json([
+	'avatar' => avatar(request()->username),
+]);
+```
+
 ### Macros
 
 ### Advanced Seeder
