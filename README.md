@@ -45,6 +45,15 @@ Psy Shell v0.9.9 (PHP 7.2.13 — cli) by Justin Hileman
 $ php artisan make:observer UserObserver --model=User
 ```
 
+Define the methods want to use, then register in `app/Providers/AppServiceProvider.php` in `boot` method.
+
+```php
+public function boot()
+{
+    \App\User::observe(\App\Observers\UserObserver::class);
+}
+```
+
 ### Processors vs Services
 
 ### Macros
