@@ -19,6 +19,9 @@ class EventServiceProvider extends ServiceProvider
             \App\Listeners\SendWelcomeNotification::class,
             SendEmailVerificationNotification::class,
         ],
+        \App\Events\NotifyUserRegisteredForOneMonth::class => [
+            \App\Listeners\SendPromotionCode::class,
+        ]
     ];
 
     /**
