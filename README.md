@@ -39,9 +39,13 @@ Psy Shell v0.9.9 (PHP 7.2.13 — cli) by Justin Hileman
 => "Hi nasrul"
 ```
 
-### Eloquent: Observer,
+### Eloquent: Observer
 
-### Processors vs Services,
+```
+$ php artisan make:observer UserObserver --model=User
+```
+
+### Processors vs Services
 
 ### Macros
 

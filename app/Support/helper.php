@@ -7,3 +7,13 @@ if(! function_exists('helloWorld'))
 		return 'Hi ' . $name;
 	}
 }
+
+if(! function_exists('generateEmployeeId'))
+{
+	function generateEmployeeId()
+	{
+		return strtoupper(
+			\Illuminate\Support\Str::random(10)
+		);
+	}
+}
