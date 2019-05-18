@@ -289,7 +289,38 @@ return response()->json([
 - [Route](https://blog.nasrulhazim.com/2017/12/laravel-route-macro/)
 - [Blueprint](https://blog.nasrulhazim.com/2017/12/laravel-blueprint-macro/)
 
-### Advanced Seeder
+### Advanced Seeder 
+
+Seed different set of data for different environment, depending on objective for the environment.
+
+- Development
+- Staging 
+- Production
+- PHPUnit Test
+- UAT / FAT if necessary
+
+The environment seeder should only executed based on application environment. Test seeder shouldn't be run in production environment.
+
+Following are the desire commands for our seeding via command line:
+
+```
+php artisan seed:pre
+php artisan seed:dev
+```
+
+Create commands:
+
+```
+php artisan make:command Seed/PreseedCommand
+php artisan make:command Seed/DevelopmentCommand
+```
+
+Create seeders:
+
+```
+php artisan make:seeder SeedPreseedCommand
+php artisan make:seeder SeedDevelopmentCommand
+```
 
 ### PHPUnit Test
 
